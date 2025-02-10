@@ -9,14 +9,15 @@ gold_line = "#FFD700"  # Goldene Linien
 # Streamlit-Seiteneinstellungen
 st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
-# Titel in einer Zeile
-st.markdown("<h1 style='text-align: center; color: gold;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
+# Titel in einer Zeile (25% kleiner)
+st.markdown("<h1 style='text-align: center; color: gold; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
 
-# Sidebar-Header
-st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
-
-# Auswahl des Diagrammtyps oben in der Sidebar
-chart_type = st.sidebar.selectbox("Diagrammtyp", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type")
+# Diagrammtyp-Auswahl direkt unter dem Titel (nur für mobile Ansicht)
+if st.checkbox("Menü anzeigen", value=False, key="menu_toggle"):
+    st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
+    chart_type = st.sidebar.selectbox("Diagrammtyp", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type")
+else:
+    chart_type = st.selectbox("Diagrammtyp", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type_mobile")
 
 # Eingabefeld für das Gesamtbudget
 total_budget = st.sidebar.number_input("Gesamtbudget", min_value=0.0, value=0.0, step=0.1)
@@ -46,6 +47,9 @@ st.markdown(f"<div style='padding: 10px; background-color: {box_color}; border-r
             f"<strong>Verbleibendes Budget:</strong> {remaining_budget:.2f} €\n"
             f"</div>", unsafe_allow_html=True)
 
+# Abstand zwischen Titel und Diagramm (nur für Desktop)
+st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
+
 # Diagramm erstellen
 if sum(values) == 0:
     st.warning("Bitte geben Sie mindestens einen positiven Wert ein, um das Diagramm anzuzeigen.")
@@ -56,7 +60,7 @@ else:
             return ('%1.1f%%' % pct) if pct > 0 else ''  # Keine Anzeige bei 0%
         wedges, texts, autotexts = ax.pie(
             values, labels=categories.keys(), colors=blue_shades, autopct=autopct_format,
-            wedgeprops={'linewidth': 2, 'edgecolor': gold_line}
+            wedgeprops={'linewidth': 1, 'edgecolor': gold_line}  # Konturen halb so dick
         )
         # Schriftgröße um 30% verkleinern
         for text in texts:
