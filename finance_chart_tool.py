@@ -11,7 +11,7 @@ gold_line = gold_color  # Goldene Linien
 st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
 # Titel in einer Zeile (25% kleiner)
-st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Kalkulation des Lebens</h1>", unsafe_allow_html=True)
 
 # Sidebar-Header (dauerhaft sichtbar)
 st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
