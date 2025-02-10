@@ -77,18 +77,34 @@ else:
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
     elif chart_type == "MindMap":
-        fig, ax = plt.subplots(figsize=(6, 3))
+        fig, ax = plt.subplots(figsize=(8, 8))  # Größeres Diagramm für MindMap
         total_sum = sum(values)
-        ax.set_xlim(-1.5, 1.5)
-        ax.set_ylim(-1.5, 1.5)
+        ax.set_xlim(-2, 2)
+        ax.set_ylim(-2, 2)
         ax.axis('off')
+
+        # Hauptkreis in der Mitte
         ax.add_patch(plt.Circle((0, 0), 0.3, color='lightgrey', ec='black'))
         ax.text(0, 0, f"{total_sum:.2f}\nBudget", ha='center', va='center', fontsize=12, color='black')
-        angles = np.linspace(0, 2 * np.pi, len(values), endpoint=False)
-        for i, (category, value) in enumerate(zip(categories.keys(), values)):
-            x, y = np.cos(angles[i]), np.sin(angles[i])
-            ax.add_patch(plt.Circle((x, y), 0.2 + 0.1 * (value / max(values)), color=blue_shades[i], alpha=0.6))
-            ax.text(x, y, f"{category}\n{value:.2f}", ha='center', va='center', fontsize=10, color='black')
-    
+
+        # Winkel für die Hauptpunkte
+        angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False)
+
+        # Hauptpunkte zeichnen
+        for i, (category, subcategories) in enumerate(categories.items()):
+            x, y = np.cos(angles[i]) * 1.2, np.sin(angles[i]) * 1.2  # Position der Hauptpunkte
+            ax.add_patch(plt.Circle((x, y), 0.2, color=blue_shades[i], alpha=0.6))
+            ax.text(x, y, f"{category}\n{sum(subcategories.values()):.2f}", ha='center', va='center', fontsize=10, color='black')
+
+            # Unterpunkte zeichnen
+            sub_angles = np.linspace(angles[i] - np.pi/6, angles[i] + np.pi/6, len(subcategories), endpoint=False)
+            for j, (subcategory, value) in enumerate(subcategories.items()):
+                sub_x, sub_y = np.cos(sub_angles[j]) * 1.8, np.sin(sub_angles[j]) * 1.8  # Position der Unterpunkte
+                circle_size = 0.1 + 0.1 * (value / total_sum)  # Größe basierend auf dem Verhältnis zum Gesamtbudget
+                ax.add_patch(plt.Circle((sub_x, sub_y), circle_size, color=blue_shades[i], alpha=0.6))
+                ax.text(sub_x, sub_y, f"{subcategory}\n{value:.2f}", ha='center', va='center', fontsize=8, color='black')
+                # Linie zwischen Haupt- und Unterpunkt
+                ax.plot([x, sub_x], [y, sub_y], color=blue_shades[i], linewidth=0.5)
+
     # Diagramm anzeigen
     st.pyplot(fig)
