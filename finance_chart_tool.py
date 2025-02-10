@@ -8,10 +8,10 @@ gold_color = "#FFD700"  # Goldene Farbe für Budget-Kreis und Konturen
 gold_line = gold_color  # Goldene Linien
 
 # Streamlit-Seiteneinstellungen
-st.set_page_config(page_title="Kalkulation des Lebens", layout="centered")
+st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
 # Titel in einer Zeile (25% kleiner)
-st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Kalkulation des Lebens</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
 
 # Sidebar-Header (dauerhaft sichtbar)
 st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
@@ -65,7 +65,7 @@ if sum(values) == 0:
     st.warning("Bitte geben Sie mindestens einen positiven Wert ein, um das Diagramm anzuzeigen.")
 else:
     with st.container():
-        fig, ax = plt.subplots(figsize=(8, 6))  # Angepasste Größe für vollständige Anzeige ohne Scrollen
+        fig, ax = plt.subplots(figsize=(10, 8))  # Größere Diagrammgröße
         if chart_type == "Kuchendiagramm":
             def autopct_format(pct):
                 return ('%1.1f%%' % pct) if pct > 0 else ''
@@ -88,26 +88,26 @@ else:
             ax.spines['bottom'].set_visible(False)
         elif chart_type == "MindMap":
             total_sum = sum(values)
-            ax.set_xlim(-2, 2)
-            ax.set_ylim(-2, 2)
+            ax.set_xlim(-2.5, 2.5)
+            ax.set_ylim(-2.5, 2.5)
             ax.axis('off')
 
             ax.add_patch(plt.Circle((0, 0), 0.3, color=gold_color, ec='black'))
-            ax.text(0, 0, f"{total_sum:.2f}\nBudget", ha='center', va='center', fontsize=12, color='black')
+            ax.text(0, 0, f"{total_sum:.2f}\nBudget", ha='center', va='center', fontsize=10, color='black')
 
             angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False)
 
             for i, (category, subcategories) in enumerate(categories.items()):
-                x, y = np.cos(angles[i]) * 0.6, np.sin(angles[i]) * 0.6
+                x, y = np.cos(angles[i]) * 0.8, np.sin(angles[i]) * 0.8  # Größerer Abstand
                 ax.add_patch(plt.Circle((x, y), 0.2, color=blue_shades[i], alpha=0.6, zorder=3))
-                ax.text(x, y, f"{category}\n{sum(subcategories.values()):.2f}", ha='center', va='center', fontsize=10, color='black', zorder=4)
+                ax.text(x, y, f"{category}\n{sum(subcategories.values()):.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)  # Kleinere Schriftgröße
                 ax.plot([0.3 * np.cos(angles[i]), x - 0.2 * np.cos(angles[i])], 
                         [0.3 * np.sin(angles[i]), y - 0.2 * np.sin(angles[i])], 
                         color=blue_shades[i], linewidth=0.5, zorder=1)
 
                 sub_angles = np.linspace(angles[i] - np.pi/8, angles[i] + np.pi/8, len(subcategories), endpoint=False)
                 for j, (subcategory, value) in enumerate(subcategories.items()):
-                    sub_x, sub_y = np.cos(sub_angles[j]) * 1.2, np.sin(sub_angles[j]) * 1.2
+                    sub_x, sub_y = np.cos(sub_angles[j]) * 1.4, np.sin(sub_angles[j]) * 1.4  # Symmetrischere Anordnung
                     circle_size = 0.1 + 0.1 * (value / total_sum) if total_sum > 0 else 0.1
                     ax.add_patch(plt.Circle((sub_x, sub_y), circle_size, color=blue_shades[i], alpha=0.6, zorder=3))
                     ax.text(sub_x, sub_y, f"{value:.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)
