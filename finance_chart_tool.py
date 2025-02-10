@@ -12,12 +12,11 @@ st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 # Titel in einer Zeile (25% kleiner)
 st.markdown("<h1 style='text-align: center; color: gold; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
 
-# Diagrammtyp-Auswahl direkt unter dem Titel (nur für mobile Ansicht)
-if st.checkbox("Menü anzeigen", value=False, key="menu_toggle"):
-    st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
-    chart_type = st.sidebar.selectbox("Diagrammtyp", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type")
-else:
-    chart_type = st.selectbox("Diagrammtyp", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type_mobile")
+# Sidebar-Header (dauerhaft sichtbar)
+st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
+
+# Diagrammtyp-Auswahl direkt über dem Diagramm
+chart_type = st.selectbox("Diagramm-Typ", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type")
 
 # Eingabefeld für das Gesamtbudget
 total_budget = st.sidebar.number_input("Gesamtbudget", min_value=0.0, value=0.0, step=0.1)
@@ -60,7 +59,7 @@ else:
             return ('%1.1f%%' % pct) if pct > 0 else ''  # Keine Anzeige bei 0%
         wedges, texts, autotexts = ax.pie(
             values, labels=categories.keys(), colors=blue_shades, autopct=autopct_format,
-            wedgeprops={'linewidth': 1, 'edgecolor': gold_line}  # Konturen halb so dick
+            wedgeprops={'linewidth': 0.8, 'edgecolor': gold_line}  # Konturen 20% dünner
         )
         # Schriftgröße um 30% verkleinern
         for text in texts:
