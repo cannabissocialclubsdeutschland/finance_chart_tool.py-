@@ -80,31 +80,31 @@ else:
             ax.spines['bottom'].set_visible(False)
         elif chart_type == "MindMap":
             total_sum = sum(values)
-            ax.set_xlim(-2.5, 2.5)
-            ax.set_ylim(-2.5, 2.5)
+            ax.set_xlim(-3.5, 3.5)  # Erhöhte Achsenlimits für größere Darstellung
+            ax.set_ylim(-3.5, 3.5)
             ax.axis('off')
 
-            ax.add_patch(plt.Circle((0, 0), 0.3, color=gold_color, ec='black'))
-            ax.text(0, 0, f"{total_sum:.2f}\nBudget", ha='center', va='center', fontsize=10, color='black')
+            ax.add_patch(plt.Circle((0, 0), 0.5, color=gold_color, ec='black'))  # Größerer zentraler Kreis
+            ax.text(0, 0, f"{total_sum:.2f}\nBudget", ha='center', va='center', fontsize=12, color='black')
 
             angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False)
 
             for i, (category, subcategories) in enumerate(categories.items()):
-                x, y = np.cos(angles[i]) * 0.8, np.sin(angles[i]) * 0.8  # Größerer Abstand
-                ax.add_patch(plt.Circle((x, y), 0.2, color=blue_shades[i], alpha=0.6, zorder=3))
-                ax.text(x, y, f"{category}\n{sum(subcategories.values()):.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)  # Kleinere Schriftgröße
-                ax.plot([0.3 * np.cos(angles[i]), x - 0.2 * np.cos(angles[i])], 
-                        [0.3 * np.sin(angles[i]), y - 0.2 * np.sin(angles[i])], 
-                        color=blue_shades[i], linewidth=0.5, zorder=1)
+                x, y = np.cos(angles[i]) * 1.2, np.sin(angles[i]) * 1.2  # Größerer Abstand
+                ax.add_patch(plt.Circle((x, y), 0.3, color=blue_shades[i], alpha=0.6, zorder=3))
+                ax.text(x, y, f"{category}\n{sum(subcategories.values()):.2f}", ha='center', va='center', fontsize=10, color='black', zorder=4)
+                ax.plot([0.5 * np.cos(angles[i]), x - 0.3 * np.cos(angles[i])], 
+                        [0.5 * np.sin(angles[i]), y - 0.3 * np.sin(angles[i])], 
+                        color=blue_shades[i], linewidth=0.8, zorder=1)
 
                 sub_angles = np.linspace(angles[i] - np.pi/8, angles[i] + np.pi/8, len(subcategories), endpoint=False)
                 for j, (subcategory, value) in enumerate(subcategories.items()):
-                    sub_x, sub_y = np.cos(sub_angles[j]) * 1.4, np.sin(sub_angles[j]) * 1.4  # Symmetrischere Anordnung
-                    circle_size = 0.1 + 0.1 * (value / total_sum) if total_sum > 0 else 0.1
+                    sub_x, sub_y = np.cos(sub_angles[j]) * 1.8, np.sin(sub_angles[j]) * 1.8  # Größerer Abstand für Unterkategorien
+                    circle_size = 0.15 + 0.15 * (value / total_sum) if total_sum > 0 else 0.15
                     ax.add_patch(plt.Circle((sub_x, sub_y), circle_size, color=blue_shades[i], alpha=0.6, zorder=3))
                     ax.text(sub_x, sub_y, f"{value:.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)
-                    ax.plot([x + 0.2 * np.cos(sub_angles[j]), sub_x - circle_size * np.cos(sub_angles[j])], 
-                            [y + 0.2 * np.sin(sub_angles[j]), sub_y - circle_size * np.sin(sub_angles[j])], 
-                            color=blue_shades[i], linewidth=0.5, zorder=1)
+                    ax.plot([x + 0.3 * np.cos(sub_angles[j]), sub_x - circle_size * np.cos(sub_angles[j])], 
+                            [y + 0.3 * np.sin(sub_angles[j]), sub_y - circle_size * np.sin(sub_angles[j])], 
+                            color=blue_shades[i], linewidth=0.8, zorder=1)
 
         st.pyplot(fig)
