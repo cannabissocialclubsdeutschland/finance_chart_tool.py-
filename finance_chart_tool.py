@@ -8,13 +8,13 @@ gold_color = "#FFD700"  # Goldene Farbe für Budget-Kreis und Konturen
 gold_line = gold_color  # Goldene Linien
 
 # Streamlit-Seiteneinstellungen
-st.set_page_config(page_title="Kalkulation des Lebens", layout="centered")
+st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
 # Titel in einer Zeile (25% kleiner)
-st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 2rem;'>Kalkulation des Lebens</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
 
 # Sidebar-Header (dauerhaft sichtbar)
-st.sidebar.markdown("<h1 style='font-family: Arial; font-size: 1.6rem; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
+st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
 
 # Diagrammtyp-Auswahl direkt über dem Diagramm
 chart_type = st.selectbox("Diagramm-Typ", ["Kuchendiagramm", "Säulendiagramm", "MindMap"], key="chart_type")
@@ -30,12 +30,33 @@ categories = {
     "Sicherheit": {"Notfälle": 0.0, "Unerwartetes": 0.0}
 }
 
+# Zustand für geöffnete Dropdown-Menüs
+if "open_category" not in st.session_state:
+    st.session_state.open_category = None
+
+# Funktion zum Öffnen/Schließen der Dropdown-Menüs
+def toggle_category(category):
+    if st.session_state.open_category == category:
+        st.session_state.open_category = None
+    else:
+        st.session_state.open_category = category
+
 # Eingabefelder für Unterkategorien in Dropdown-Menüs
 values = []
 for category, subcategories in categories.items():
-    with st.sidebar.expander(category):
+    if st.session_state.open_category == category:
+        # Geöffnetes Menü in der Mitte anzeigen
+        st.sidebar.markdown(f"<div style='text-align: center;'><h3>{category}</h3></div>", unsafe_allow_html=True)
         for subcategory in subcategories:
-            categories[category][subcategory] = st.number_input(f"{subcategory}", min_value=0.0, value=0.0, step=0.1)
+            categories[category][subcategory] = st.sidebar.number_input(
+                f"{subcategory}", min_value=0.0, value=0.0, step=0.1, key=f"{category}_{subcategory}"
+            )
+        if st.sidebar.button("Schließen", key=f"close_{category}"):
+            st.session_state.open_category = None
+    else:
+        # Verblassende Menüs
+        if st.sidebar.button(category, key=f"open_{category}"):
+            toggle_category(category)
     values.append(sum(subcategories.values()))
 
 # Berechnung der Differenz zwischen Gesamtbudget und Gesamtausgaben
