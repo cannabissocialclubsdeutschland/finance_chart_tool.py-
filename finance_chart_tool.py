@@ -57,7 +57,7 @@ if sum(values) == 0:
     st.warning("Bitte geben Sie mindestens einen positiven Wert ein, um das Diagramm anzuzeigen.")
 else:
     with st.container():
-        fig, ax = plt.subplots(figsize=(10, 8))  # Größere Diagrammgröße
+        fig, ax = plt.subplots(figsize=(15, 12))  # Größere Diagrammgröße
         if chart_type == "Kuchendiagramm":
             def autopct_format(pct):
                 return ('%1.1f%%' % pct) if pct > 0 else ''
