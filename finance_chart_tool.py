@@ -6,11 +6,12 @@ import numpy as np
 color = "#ADD8E6"
 
 # Streamlit-Seiteneinstellungen
-st.set_page_config(page_title="Finanzberater-Tool", layout="wide")
+st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
-# Titel und Header
-st.markdown("<h1 style='text-align: center; color: gold;'>Finanzberater</h1>", unsafe_allow_html=True)
-st.markdown("<h1 style='text-align: center;'>-Tool</h1>", unsafe_allow_html=True)
+# Titel in einer Zeile
+st.markdown("<h1 style='text-align: center; color: gold;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
+
+# Sidebar-Header
 st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
 
 # Auswahl des Diagrammtyps oben in der Sidebar
@@ -45,7 +46,7 @@ st.markdown(f"<div style='padding: 10px; background-color: {box_color}; border-r
             f"</div>", unsafe_allow_html=True)
 
 # Diagramm erstellen
-fig, ax = plt.subplots(figsize=(7, 4))  # Größe reduziert, um weniger Scrollen zu erfordern
+fig, ax = plt.subplots(figsize=(6, 3))  # Kleinere Diagrammgröße
 if sum(values) == 0:
     st.warning("Bitte geben Sie mindestens einen positiven Wert ein, um das Diagramm anzuzeigen.")
 else:
