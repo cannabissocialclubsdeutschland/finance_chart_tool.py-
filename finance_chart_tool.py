@@ -30,25 +30,22 @@ categories = {
     "Sicherheit": {"Notfälle": 0.0, "Unerwartetes": 0.0}
 }
 
-# Zustand für geöffnete Dropdown-Menüs
-if "open_category" not in st.session_state:
-    st.session_state.open_category = None
-
-# Funktion zum Öffnen/Schließen der Dropdown-Menüs
-def toggle_category(category):
-    st.session_state.open_category = category if st.session_state.open_category != category else None
+# Zustand für geöffnete Dropdown-Menüs in st.session_state initialisieren
+if "open_categories" not in st.session_state:
+    st.session_state.open_categories = {category: False for category in categories}
 
 # Eingabefelder für Unterkategorien in Dropdown-Menüs
 values = []
 for category, subcategories in categories.items():
-    if st.session_state.open_category == category:
-        st.sidebar.markdown(f"<div style='text-align: center;'><h3>{category}</h3></div>", unsafe_allow_html=True)
+    st.sidebar.markdown(f"<div style='text-align: center;'><h3>{category}</h3></div>", unsafe_allow_html=True)
+    show_inputs = st.sidebar.checkbox(f"{category} anzeigen", key=f"toggle_{category}", value=st.session_state.open_categories[category])
+    st.session_state.open_categories[category] = show_inputs  # Status aktualisieren
+
+    if show_inputs:
         for subcategory in subcategories:
             categories[category][subcategory] = st.sidebar.number_input(
-                f"{subcategory}", min_value=0.0, value=0.0, step=0.1, key=f"{category}_{subcategory}"
+                f"{subcategory}", min_value=0.0, value=categories[category][subcategory], step=0.1, key=f"{category}_{subcategory}"
             )
-    if st.sidebar.button(category, key=f"toggle_{category}"):
-        toggle_category(category)
     values.append(sum(subcategories.values()))
 
 # Berechnung der Differenz zwischen Gesamtbudget und Gesamtausgaben
