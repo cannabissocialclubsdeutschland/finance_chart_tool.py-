@@ -2,8 +2,9 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Einheitliche Farbe mit leichtem Blaustich
-color = "#ADD8E6"
+# Blautöne mit leichtem Kontrast
+blue_shades = ["#A6CEE3", "#7EA8C4", "#5683A5", "#2E5E86"]
+gold_line = "#FFD700"  # Goldene Linien
 
 # Streamlit-Seiteneinstellungen
 st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
@@ -46,22 +47,34 @@ st.markdown(f"<div style='padding: 10px; background-color: {box_color}; border-r
             f"</div>", unsafe_allow_html=True)
 
 # Diagramm erstellen
-fig, ax = plt.subplots(figsize=(6, 3))  # Kleinere Diagrammgröße
 if sum(values) == 0:
     st.warning("Bitte geben Sie mindestens einen positiven Wert ein, um das Diagramm anzuzeigen.")
 else:
     if chart_type == "Kuchendiagramm":
+        fig, ax = plt.subplots(figsize=(7, 4))  # Kreis 15% größer
         def autopct_format(pct):
             return ('%1.1f%%' % pct) if pct > 0 else ''  # Keine Anzeige bei 0%
-        wedges, texts, autotexts = ax.pie(values, labels=categories.keys(), colors=[color]*len(values), autopct=autopct_format)
+        wedges, texts, autotexts = ax.pie(
+            values, labels=categories.keys(), colors=blue_shades, autopct=autopct_format,
+            wedgeprops={'linewidth': 2, 'edgecolor': gold_line}
+        )
+        # Schriftgröße um 30% verkleinern
+        for text in texts:
+            text.set_fontsize(10)  # Standard ist ~14, daher 10 für ~30% kleiner
         for autotext in autotexts:
+            autotext.set_fontsize(10)
             autotext.set_color('black')
     elif chart_type == "Säulendiagramm":
-        bars = ax.bar(categories.keys(), values, color=color)
+        fig, ax = plt.subplots(figsize=(8, 5))  # 20% größer
+        bars = ax.bar(categories.keys(), values, color=blue_shades)
         for bar in bars:
             height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height, f'{height:.2f}', ha='center', va='bottom')
+            ax.text(bar.get_x() + bar.get_width()/2., height, f'{height:.2f}', ha='center', va='bottom', fontsize=10)
+        # Obere und rechte Achsenlinie entfernen
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
     elif chart_type == "MindMap":
+        fig, ax = plt.subplots(figsize=(6, 3))
         total_sum = sum(values)
         ax.set_xlim(-1.5, 1.5)
         ax.set_ylim(-1.5, 1.5)
@@ -71,7 +84,7 @@ else:
         angles = np.linspace(0, 2 * np.pi, len(values), endpoint=False)
         for i, (category, value) in enumerate(zip(categories.keys(), values)):
             x, y = np.cos(angles[i]), np.sin(angles[i])
-            ax.add_patch(plt.Circle((x, y), 0.2 + 0.1 * (value / max(values)), color=color, alpha=0.6))
+            ax.add_patch(plt.Circle((x, y), 0.2 + 0.1 * (value / max(values)), color=blue_shades[i], alpha=0.6))
             ax.text(x, y, f"{category}\n{value:.2f}", ha='center', va='center', fontsize=10, color='black')
     
     # Diagramm anzeigen
