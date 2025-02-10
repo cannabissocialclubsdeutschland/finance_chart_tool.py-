@@ -8,10 +8,10 @@ gold_color = "#FFD700"  # Goldene Farbe für Budget-Kreis und Konturen
 gold_line = gold_color  # Goldene Linien
 
 # Streamlit-Seiteneinstellungen
-st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
+st.set_page_config(page_title="Kalkulation des Lebens", layout="centered")
 
 # Titel in einer Zeile (25% kleiner)
-st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Kalkulation des Lebens</h1>", unsafe_allow_html=True)
 
 # Sidebar-Header (dauerhaft sichtbar)
 st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
@@ -110,7 +110,7 @@ else:
                     sub_x, sub_y = np.cos(sub_angles[j]) * 1.2, np.sin(sub_angles[j]) * 1.2
                     circle_size = 0.1 + 0.1 * (value / total_sum) if total_sum > 0 else 0.1
                     ax.add_patch(plt.Circle((sub_x, sub_y), circle_size, color=blue_shades[i], alpha=0.6, zorder=3))
-                    ax.text(sub_x, sub_y, f"{subcategory}\n{value:.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)
+                    ax.text(sub_x, sub_y, f"{value:.2f}", ha='center', va='center', fontsize=8, color='black', zorder=4)
                     ax.plot([x + 0.2 * np.cos(sub_angles[j]), sub_x - circle_size * np.cos(sub_angles[j])], 
                             [y + 0.2 * np.sin(sub_angles[j]), sub_y - circle_size * np.sin(sub_angles[j])], 
                             color=blue_shades[i], linewidth=0.5, zorder=1)
