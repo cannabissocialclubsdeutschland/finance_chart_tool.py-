@@ -11,7 +11,7 @@ gold_line = gold_color  # Goldene Linien
 st.set_page_config(page_title="Finanzberater-Tool", layout="centered")
 
 # Titel in einer Zeile (25% kleiner)
-st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Kalkulation des Lebens</h1>", unsafe_allow_html=True)
+st.markdown(f"<h1 style='text-align: center; color: {gold_color}; font-size: 1.75rem;'>Finanzberater-Tool</h1>", unsafe_allow_html=True)
 
 # Sidebar-Header (dauerhaft sichtbar)
 st.sidebar.markdown("<h1 style='font-family: Arial; font-weight: bold;'>United Hands Capital</h1>", unsafe_allow_html=True)
@@ -30,20 +30,12 @@ categories = {
     "Sicherheit": {"Notfälle": 0.0, "Unerwartetes": 0.0}
 }
 
-# Zustand für geöffnete Dropdown-Menüs in st.session_state initialisieren
-if "open_categories" not in st.session_state:
-    st.session_state.open_categories = {category: False for category in categories}
-
-# Eingabefelder für Unterkategorien in Dropdown-Menüs
+# Dropdown-Menüs für Kategorien mit klassischen Dropdowns
 values = []
 for category, subcategories in categories.items():
-    st.sidebar.markdown(f"<div style='text-align: center;'><h3>{category}</h3></div>", unsafe_allow_html=True)
-    show_inputs = st.sidebar.checkbox(f"{category} anzeigen", key=f"toggle_{category}", value=st.session_state.open_categories[category])
-    st.session_state.open_categories[category] = show_inputs  # Status aktualisieren
-
-    if show_inputs:
+    with st.sidebar.expander(f"{category}"):
         for subcategory in subcategories:
-            categories[category][subcategory] = st.sidebar.number_input(
+            categories[category][subcategory] = st.number_input(
                 f"{subcategory}", min_value=0.0, value=categories[category][subcategory], step=0.1, key=f"{category}_{subcategory}"
             )
     values.append(sum(subcategories.values()))
